@@ -122,8 +122,13 @@ download_plugin() {
   local destination=$3
 
   if [[ -f "$destination" ]]; then
-    log "${name} ya presente"
-    return
+    if unzip -t "$destination" >/dev/null 2>&1; then
+      log "${name} ya presente"
+      return
+    else
+      log "${name} corrupto, re-descargando"
+      rm -f "$destination"
+    fi
   fi
 
   log "Descargando ${name}"
@@ -139,8 +144,9 @@ install_plugins() {
   local chunky_url="https://api.spiget.org/v2/resources/81534/download"
   local farmlimiter_url="https://api.spiget.org/v2/resources/120384/download"
   local alternatecurrent_url="https://api.spiget.org/v2/resources/96380/download"
-  local multiverse_core_url="https://api.spiget.org/v2/resources/390/download"
-  local multiverse_portals_url="https://api.spiget.org/v2/resources/296/download"
+  # Multiverse: usamos builds oficiales de Jenkins (más estables que descargas de Spiget)
+  local multiverse_core_url="https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar"
+  local multiverse_portals_url="https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar"
   local voidgen_url="https://api.spiget.org/v2/resources/63689/download"
 
   local plugins=(
