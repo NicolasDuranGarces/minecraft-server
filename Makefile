@@ -10,6 +10,7 @@ RCON_PORT ?= 25575
 .PHONY: mc-rcon
 
 build:
+	$(COMPOSE) down
 	$(COMPOSE) build $(SERVICE)
 
 up:

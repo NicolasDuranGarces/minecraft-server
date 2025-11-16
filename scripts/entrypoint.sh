@@ -210,8 +210,8 @@ install_plugins() {
   local farmlimiter_url="https://api.spiget.org/v2/resources/120384/download"
   local alternatecurrent_url="https://api.spiget.org/v2/resources/96380/download"
   # Multiverse: usamos builds oficiales de Jenkins (más estables que descargas de Spiget)
-  local multiverse_core_url="https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar,https://api.spiget.org/v2/resources/390/download"
-  local multiverse_portals_url="https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar,https://api.spiget.org/v2/resources/296/download"
+  local multiverse_core_url="https://github.com/Multiverse/Multiverse-Core/releases/download/5.3.4/multiverse-core-5.3.4.jar,https://api.spiget.org/v2/resources/390/download,https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar"
+  local multiverse_portals_url="https://github.com/Multiverse/Multiverse-Portals/releases/download/5.1.1/multiverse-portals-5.1.1.jar,https://api.spiget.org/v2/resources/296/download,https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar"
   local voidgen_url="https://api.spiget.org/v2/resources/63689/download"
 
   local plugins=(
