@@ -116,6 +116,60 @@ settings:
 EOF
 }
 
+ensure_op_camello() {
+  local file="$DATA_DIR/ops.json"
+  local name="CamelloEnfermo"
+  local online_mode="${ONLINE_MODE:-}"
+  if [[ -z "$online_mode" && -f "$DATA_DIR/server.properties" ]]; then
+    online_mode=$(grep -E '^online-mode=' "$DATA_DIR/server.properties" | cut -d'=' -f2)
+  fi
+  local uuid=""
+
+  if [[ "${online_mode,,}" == "true" ]]; then
+    # intentar UUID premium
+    uuid=$(curl -fsSL "https://api.mojang.com/users/profiles/minecraft/${name}" | python3 - <<'PY'
+import json,sys
+data=sys.stdin.read().strip()
+if not data:
+    sys.exit(1)
+obj=json.loads(data)
+raw=obj.get("id","")
+if len(raw)!=32:
+    sys.exit(1)
+uuid=f"{raw[0:8]}-{raw[8:12]}-{raw[12:16]}-{raw[16:20]}-{raw[20:]}"
+print(uuid)
+PY) || uuid=""
+    if [[ -z "$uuid" ]]; then
+      log "No se pudo obtener UUID premium de CamelloEnfermo; usando UUID offline"
+    fi
+  fi
+
+  if [[ -z "$uuid" ]]; then
+    uuid=$(python3 - <<'PY'
+import uuid
+print(uuid.uuid3(uuid.NAMESPACE_DNS, "OfflinePlayer:CamelloEnfermo"))
+PY)
+  fi
+
+  python3 - "$file" "$name" "$uuid" <<'PY'
+import json, os, sys
+file, name, uuid = sys.argv[1], sys.argv[2], sys.argv[3]
+entry = {"uuid": uuid, "name": name, "level": 4, "bypassesPlayerLimit": True}
+data = []
+if os.path.exists(file):
+    try:
+        with open(file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        data = []
+if not any((e.get("uuid") == uuid) or (e.get("name", "").lower() == name.lower()) for e in data):
+    data.append(entry)
+    with open(file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+PY
+  log "Ops actualizado para ${name} (${uuid})"
+}
+
 download_plugin() {
   local name=$1
   local url=$2
@@ -201,6 +255,7 @@ bootstrap() {
   install_plugins
   sync_plugin_db_configs
   ensure_no_connection_throttle
+  ensure_op_camello
   remove_authme_plugin
 }
 

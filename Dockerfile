@@ -9,8 +9,21 @@ ENV PAPER_VERSION=${PAPER_VERSION} \
     SKINSRESTORER_VERSION=15.9.0
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl python3 rsync unzip \
+    && apt-get install -y --no-install-recommends curl python3 rsync unzip ca-certificates \
     && rm -rf /var/lib/apt/lists/*
+
+# Instala mcrcon compilándolo desde fuente (compatible x86_64/arm64)
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends build-essential git; \
+    tmpdir=$(mktemp -d); \
+    git clone --depth=1 https://github.com/Tiiffi/mcrcon.git "$tmpdir/mcrcon"; \
+    cd "$tmpdir/mcrcon"; \
+    make; \
+    install mcrcon /usr/local/bin/mcrcon; \
+    rm -rf "$tmpdir"; \
+    apt-get purge -y --auto-remove build-essential git; \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/paper
 
