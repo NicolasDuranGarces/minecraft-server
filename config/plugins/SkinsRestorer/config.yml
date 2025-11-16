@@ -1,0 +1,21 @@
+Storage:
+  Type: MYSQL
+  MySQL:
+    Host: db
+    Port: 3306
+    Database: mc_auth
+    Username: mc_auth
+    Password: mc_auth_pass
+    UseSSL: false
+
+SkinWithoutPremium:
+  Enabled: true
+  DefaultSkins:
+    - Steve
+    - Alex
+
+Updater:
+  CheckUpdates: true
+
+Bungee:
+  Enabled: false

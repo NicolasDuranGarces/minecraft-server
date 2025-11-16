@@ -1,0 +1,62 @@
+services:
+  mc:
+    build:
+      context: .
+      args:
+        PAPER_VERSION: ${PAPER_VERSION:-1.21.8}
+        PAPER_BUILD: ${PAPER_BUILD:-latest}
+    container_name: minecraft_mc
+    restart: unless-stopped
+    environment:
+      EULA: ${MC_EULA:-true}
+      JVM_FLAGS: ${MC_JVM_FLAGS:--Xms4G -Xmx4G -XX:+UseG1GC}
+      MC_RCON_PASSWORD: ${MC_RCON_PASSWORD:-CambiaEstaClave}
+      MC_MAX_PLAYERS: ${MAX_PLAYERS:-20}
+      MC_DIFFICULTY: ${DIFFICULTY:-hard}
+      SKINSRESTORER_VERSION: ${SKINSRESTORER_VERSION:-15.9.0}
+      LUCKPERMS_DOWNLOAD_URL: ${LUCKPERMS_DOWNLOAD_URL:-https://api.spiget.org/v2/resources/28140/download}
+      LUCKPERMS_FILENAME: ${LUCKPERMS_FILENAME:-LuckPerms.jar}
+      SPARK_DOWNLOAD_URL: ${SPARK_DOWNLOAD_URL:-https://api.spiget.org/v2/resources/57242/download}
+      SPARK_FILENAME: ${SPARK_FILENAME:-spark.jar}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${DB_NAME:-mc_auth}
+      DB_USER: ${DB_USER:-mc_auth}
+      DB_PASSWORD: ${DB_PASSWORD:-mc_auth_pass}
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+    volumes:
+      - ./data:/data
+      - ./config:/config:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11.4
+    container_name: minecraft_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-mc_root_pass}
+      MARIADB_DATABASE: ${DB_NAME:-mc_auth}
+      MARIADB_USER: ${DB_USER:-mc_auth}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-mc_auth_pass}
+    volumes:
+      - ./db_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h localhost -uroot -p\"$${MARIADB_ROOT_PASSWORD}\"",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    ports:
+      - "3306:3306"
+
+networks:
+  default:
+    name: minecraft_net
