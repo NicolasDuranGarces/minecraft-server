@@ -121,20 +121,31 @@ download_plugin() {
   local url=$2
   local destination=$3
 
-  if [[ -f "$destination" ]]; then
-    if unzip -t "$destination" >/dev/null 2>&1; then
-      log "${name} ya presente"
-      return
-    else
-      log "${name} corrupto, re-descargando"
-      rm -f "$destination"
-    fi
+  local urls=()
+  # permitir lista separada por coma
+  IFS=',' read -r -a urls <<<"$url"
+
+  if [[ -f "$destination" ]] && unzip -t "$destination" >/dev/null 2>&1; then
+    log "${name} ya presente"
+    return
   fi
 
-  log "Descargando ${name}"
-  tmp="${destination}.tmp"
-  curl -fsSL -o "$tmp" "$url"
-  mv "$tmp" "$destination"
+  [[ -f "$destination" ]] && log "${name} corrupto, re-descargando" && rm -f "$destination"
+
+  for u in "${urls[@]}"; do
+    u="${u//[[:space:]]/}"
+    [[ -z "$u" ]] && continue
+    log "Descargando ${name} desde ${u}"
+    tmp="${destination}.tmp"
+    if curl -fsSL -o "$tmp" "$u" && unzip -t "$tmp" >/dev/null 2>&1; then
+      mv "$tmp" "$destination"
+      return
+    fi
+    rm -f "$tmp"
+    log "Fallo descargando ${name} desde ${u}, probando siguiente origen"
+  done
+
+  log "No se pudo descargar ${name}; revisa la conectividad o URLs"
 }
 
 install_plugins() {
@@ -145,8 +156,8 @@ install_plugins() {
   local farmlimiter_url="https://api.spiget.org/v2/resources/120384/download"
   local alternatecurrent_url="https://api.spiget.org/v2/resources/96380/download"
   # Multiverse: usamos builds oficiales de Jenkins (más estables que descargas de Spiget)
-  local multiverse_core_url="https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar"
-  local multiverse_portals_url="https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar"
+  local multiverse_core_url="https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar,https://api.spiget.org/v2/resources/390/download"
+  local multiverse_portals_url="https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar,https://api.spiget.org/v2/resources/296/download"
   local voidgen_url="https://api.spiget.org/v2/resources/63689/download"
 
   local plugins=(

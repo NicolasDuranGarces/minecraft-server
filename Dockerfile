@@ -9,7 +9,7 @@ ENV PAPER_VERSION=${PAPER_VERSION} \
     SKINSRESTORER_VERSION=15.9.0
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl python3 rsync \
+    && apt-get install -y --no-install-recommends curl python3 rsync unzip \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/paper
