@@ -16,6 +16,16 @@ teleport-safety: true
 # Oculta avisos de actualización en el chat
 disable-update-check: true
 
+# Respawn y join en lobby
+respawn-listener-priority: high
+spawn-on-join: true
+spawn-on-join-list:
+  - lobby
+newbies:
+  spawn-on-join: true
+  spawn: lobby
+  kit: ''
+
 chat:
   radius: 0
   # Muestra prefijo/sufijo (LuckPerms via Vault) + nombre
