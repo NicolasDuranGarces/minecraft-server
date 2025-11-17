@@ -7,9 +7,12 @@ permissions:
   - essentials.sethome
   - essentials.home
   # Lobby (tp a mundo lobby con Multiverse)
-  - multiverse.teleport.self.lobby
   - multiverse.access.lobby
-  - multiverse.core.spawn.self
+  - multiverse.teleport.self.lobby
+  # Portales Multiverse: permitir uso, no comandos entre mundos
+  - multiverse.portal.access.*
+  - multiverse.portal.use
+  # Sin permisos de /mvtp libre a otros mundos (no añadido)
   # ProtectionStones: permitir colocar y gestionar su propia región
   - protectionstones.create
   - protectionstones.use.*
