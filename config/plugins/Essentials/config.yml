@@ -1,0 +1,29 @@
+# Config reducido para EssentialsX 2.21.x
+# Se usa EssentialsXChat para mostrar prefijos/rangos en el chat
+
+ops-name-color: 'c'
+nickname-prefix: '~'
+ignore-colors-in-max-nick-length: false
+hide-displayname-in-vanish: true
+change-displayname: true
+change-tab-complete-name: false
+# Mostrar prefijo en la lista de jugadores (tab)
+change-playerlist: true
+add-prefix-in-playerlist: true
+add-suffix-in-playerlist: false
+teleport-safety: true
+
+# Oculta avisos de actualización en el chat
+disable-update-check: true
+
+chat:
+  radius: 0
+  # Muestra prefijo/sufijo (LuckPerms via Vault) + nombre
+  format: '{PREFIX}&r{DISPLAYNAME}&7:&f {MESSAGE}'
+  # Formatos por grupo para mostrar etiqueta USER aunque el grupo interno sea "default"
+  group-formats:
+    default: '&7[USER] &r{DISPLAYNAME}&7:&f {MESSAGE}'
+    user: '&7[USER] &r{DISPLAYNAME}&7:&f {MESSAGE}'
+    admin: '&c[ADMIN] &r{DISPLAYNAME}&7:&f {MESSAGE}'
+
+world-aliases: {}

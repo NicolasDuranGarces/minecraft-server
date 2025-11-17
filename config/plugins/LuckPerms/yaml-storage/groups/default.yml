@@ -1,0 +1,22 @@
+uuid: 00000000-0000-0000-0000-000000000000
+name: default
+permissions:
+  # TPA / hogar
+  - essentials.tpa
+  - essentials.tpaccept
+  - essentials.sethome
+  - essentials.home
+  # Lobby (tp a mundo lobby con Multiverse)
+  - multiverse.teleport.self.lobby
+  - multiverse.access.lobby
+  - multiverse.core.spawn.self
+  # ProtectionStones: permitir colocar y gestionar su propia región
+  - protectionstones.create
+  - protectionstones.use.*
+  # Límite de protecciones: 3 regiones por jugador
+  - protectionstones.limit.3
+prefixes:
+  '10': '&7[USER] '
+meta:
+  tabprefix: '&7[USER] '
+  tabsuffix: ''

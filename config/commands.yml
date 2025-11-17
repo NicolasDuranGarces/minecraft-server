@@ -1,0 +1,13 @@
+command-block-overrides: []
+ignore-vanilla-permissions: false
+aliases:
+  lobby:
+  - "mvtp lobby"
+  comandos:
+  - "minecraft:tellraw @s [{\"text\":\"Comandos básicos:\",\"color\":\"gold\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"/lobby\",\"color\":\"aqua\"},{\"text\":\" - Ir al lobby\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"/tpa <jugador>\",\"color\":\"aqua\"},{\"text\":\" - Solicitar TP\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"/tpaccept\",\"color\":\"aqua\"},{\"text\":\" - Aceptar TP\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"/sethome\",\"color\":\"aqua\"},{\"text\":\" - Establecer casa\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"/home\",\"color\":\"aqua\"},{\"text\":\" - Ir a tu casa\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @s [{\"text\":\"Protección: craftea y coloca una piedra PS (fortress/guardian/citadel/beacon/shield/carbon). Usa /ps info, /ps addowner, /ps addmember\",\"color\":\"gray\"}]"

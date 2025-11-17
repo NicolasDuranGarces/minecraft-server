@@ -10,6 +10,19 @@ LUCKPERMS_DOWNLOAD_URL=${LUCKPERMS_DOWNLOAD_URL:-https://api.spiget.org/v2/resou
 LUCKPERMS_FILENAME=${LUCKPERMS_FILENAME:-LuckPerms.jar}
 SPARK_DOWNLOAD_URL=${SPARK_DOWNLOAD_URL:-https://api.spiget.org/v2/resources/57242/download}
 SPARK_FILENAME=${SPARK_FILENAME:-spark.jar}
+ESSENTIALSX_VERSION=${ESSENTIALSX_VERSION:-2.21.2}
+ESSENTIALSX_URL=${ESSENTIALSX_URL:-https://github.com/EssentialsX/Essentials/releases/download/${ESSENTIALSX_VERSION}/EssentialsX-${ESSENTIALSX_VERSION}.jar}
+ESSENTIALSX_FILENAME=${ESSENTIALSX_FILENAME:-EssentialsX-${ESSENTIALSX_VERSION}.jar}
+ESSENTIALSX_CHAT_URL=${ESSENTIALSX_CHAT_URL:-https://github.com/EssentialsX/Essentials/releases/download/${ESSENTIALSX_VERSION}/EssentialsXChat-${ESSENTIALSX_VERSION}.jar}
+ESSENTIALSX_CHAT_FILENAME=${ESSENTIALSX_CHAT_FILENAME:-EssentialsXChat-${ESSENTIALSX_VERSION}.jar}
+VAULT_URL=${VAULT_URL:-https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar}
+VAULT_FILENAME=${VAULT_FILENAME:-Vault.jar}
+WORLD_EDIT_URL=${WORLD_EDIT_URL:-https://cdn.modrinth.com/data/1u6JkXh5/versions/3ISh7ADm/worldedit-bukkit-7.3.17.jar}
+WORLD_EDIT_FILENAME=${WORLD_EDIT_FILENAME:-worldedit-bukkit-7.3.17.jar}
+WORLD_GUARD_URL=${WORLD_GUARD_URL:-https://cdn.modrinth.com/data/DKY9btbd/versions/PO4MKx7e/worldguard-bukkit-7.0.14-dist.jar}
+WORLD_GUARD_FILENAME=${WORLD_GUARD_FILENAME:-worldguard-bukkit-7.0.14-dist.jar}
+PROTECTIONSTONES_URL=${PROTECTIONSTONES_URL:-https://github.com/espidev/ProtectionStones/releases/download/2.10.5/ProtectionStones-2.10.5.jar}
+PROTECTIONSTONES_FILENAME=${PROTECTIONSTONES_FILENAME:-ProtectionStones-2.10.5.jar}
 
 log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
@@ -84,6 +97,21 @@ sync_plugin_db_configs() {
   patch_yaml_key "$skins_config" "Database" "${DB_NAME:-mc_auth}"
   patch_yaml_key "$skins_config" "Username" "${DB_USER:-mc_auth}"
   patch_yaml_key "$skins_config" "Password" "${DB_PASSWORD:-mc_auth_pass}"
+}
+
+ensure_luckperms_yaml_storage() {
+  # Fuerza LuckPerms a usar almacenamiento YAML y copia plantillas de grupos
+  local lp_dir="$DATA_DIR/plugins/LuckPerms"
+  local lp_config="$lp_dir/config.yml"
+  mkdir -p "$lp_dir"
+  patch_yaml_root_key "$lp_config" "storage-method" "yaml"
+  # Limpia base H2 previa para evitar confusión
+  rm -f "$lp_dir"/luckperms-h2*.mv.db "$lp_dir"/luckperms*.db 2>/dev/null || true
+
+  local template_dir="$CONFIG_DIR/plugins/LuckPerms/yaml-storage"
+  if [[ -d "$template_dir" ]]; then
+    rsync -a --ignore-existing "$template_dir"/ "$lp_dir/yaml-storage"/ || true
+  fi
 }
 
 remove_authme_plugin() {
@@ -202,7 +230,23 @@ download_plugin() {
   log "No se pudo descargar ${name}; revisa la conectividad o URLs"
 }
 
+validate_plugin_name() {
+  # Valida que el plugin.yml dentro del jar contenga "name: < esperado >"
+  local jar=$1
+  local expected=$2
+  if [[ ! -f "$jar" ]]; then
+    return 1
+  fi
+  unzip -p "$jar" plugin.yml 2>/dev/null | grep -qi "^name:[[:space:]]*$expected" || return 1
+  return 0
+}
+
 install_plugins() {
+  # Limpia remapeos previos para evitar caches de jars corruptos o antiguos
+  rm -rf "$PLUGINS_DIR/.paper-remapped" 2>/dev/null || true
+  # Remueve plugin roto ExperienceBoost (no compatible con 1.21.8)
+  rm -rf "$PLUGINS_DIR/ExperienceBoost" "$PLUGINS_DIR/ExperienceBoost.jar" "$PLUGINS_DIR/experienceboost.jar" 2>/dev/null || true
+
   local skins_url="https://github.com/SkinsRestorer/SkinsRestorer/releases/download/${SKINSRESTORER_VERSION}/SkinsRestorer.jar"
   local luckperms_url="${LUCKPERMS_DOWNLOAD_URL}"
   local spark_url="${SPARK_DOWNLOAD_URL}"
@@ -215,6 +259,12 @@ install_plugins() {
   local voidgen_url="https://api.spiget.org/v2/resources/63689/download"
 
   local plugins=(
+    "Vault|${VAULT_URL}|${VAULT_FILENAME}"
+    "EssentialsX|${ESSENTIALSX_URL}|${ESSENTIALSX_FILENAME}"
+    "EssentialsXChat|${ESSENTIALSX_CHAT_URL}|${ESSENTIALSX_CHAT_FILENAME}"
+    "WorldEdit|${WORLD_EDIT_URL}|${WORLD_EDIT_FILENAME}"
+    "WorldGuard|${WORLD_GUARD_URL}|${WORLD_GUARD_FILENAME}"
+    "ProtectionStones|${PROTECTIONSTONES_URL}|${PROTECTIONSTONES_FILENAME}"
     "SkinsRestorer|$skins_url|SkinsRestorer-${SKINSRESTORER_VERSION}.jar"
     "LuckPerms|$luckperms_url|${LUCKPERMS_FILENAME}"
     "spark|$spark_url|${SPARK_FILENAME}"
@@ -229,7 +279,30 @@ install_plugins() {
   local entry name url filename
   for entry in "${plugins[@]}"; do
     IFS="|" read -r name url filename <<<"$entry"
-    download_plugin "$name" "$url" "$PLUGINS_DIR/$filename"
+    local dest="$PLUGINS_DIR/$filename"
+    # Limpieza de jars antiguos para WorldEdit/WorldGuard al cambiar nombres a -dist
+    if [[ "$name" == "WorldEdit" ]]; then
+      find "$PLUGINS_DIR" -maxdepth 1 -type f -name "worldedit-bukkit-*.jar" ! -name "$(basename "$dest")" -delete || true
+    elif [[ "$name" == "WorldGuard" ]]; then
+      find "$PLUGINS_DIR" -maxdepth 1 -type f -name "worldguard-bukkit-*.jar" ! -name "$(basename "$dest")" -delete || true
+    fi
+    # Limpiar versiones antiguas de Essentials para forzar actualización y evitar duplicados
+    if [[ "$name" == "EssentialsX" ]]; then
+      find "$PLUGINS_DIR" -maxdepth 1 -type f -name "EssentialsX*.jar" ! -name "$(basename "$dest")" -delete || true
+    fi
+    if [[ "$name" == "EssentialsXChat" ]]; then
+      find "$PLUGINS_DIR" -maxdepth 1 -type f -name "EssentialsXChat*.jar" ! -name "$(basename "$dest")" -delete || true
+    fi
+    # Forzar limpieza si el jar existente no es el plugin correcto
+    if [[ "$name" == "Multiverse-Portals" ]]; then
+      if ! validate_plugin_name "$dest" "Multiverse-Portals"; then
+        rm -f "$dest"
+      fi
+    fi
+    download_plugin "$name" "$url" "$dest"
+    if [[ "$name" == "Multiverse-Portals" ]] && ! validate_plugin_name "$dest" "Multiverse-Portals"; then
+      log "Multiverse-Portals descargado pero inválido; intenta bajar el jar manualmente desde https://github.com/Multiverse/Multiverse-Portals/releases"
+    fi
   done
 }
 
@@ -254,6 +327,7 @@ bootstrap() {
 
   install_plugins
   sync_plugin_db_configs
+  ensure_luckperms_yaml_storage
   ensure_no_connection_throttle
   ensure_op_camello
   remove_authme_plugin
