@@ -52,6 +52,15 @@ ensure_commands_aliases() {
   fi
 }
 
+ensure_multiverse_core_config() {
+  local src_cfg="$CONFIG_DIR/plugins/Multiverse-Core/config.yml"
+  local dst_cfg="$DATA_DIR/plugins/Multiverse-Core/config.yml"
+  if [[ -f "$src_cfg" ]]; then
+    mkdir -p "$(dirname "$dst_cfg")"
+    cp -f "$src_cfg" "$dst_cfg"
+  fi
+}
+
 patch_property() {
   local key=$1
   local value=$2
@@ -263,6 +272,7 @@ install_plugins() {
   # Multiverse: usamos builds oficiales de Jenkins (más estables que descargas de Spiget)
   local multiverse_core_url="https://github.com/Multiverse/Multiverse-Core/releases/download/5.3.4/multiverse-core-5.3.4.jar,https://api.spiget.org/v2/resources/390/download,https://ci.onarandombox.com/job/Multiverse-Core/lastSuccessfulBuild/artifact/target/Multiverse-Core-4.3.1-SNAPSHOT.jar"
   local multiverse_portals_url="https://github.com/Multiverse/Multiverse-Portals/releases/download/5.1.1/multiverse-portals-5.1.1.jar,https://api.spiget.org/v2/resources/296/download,https://ci.onarandombox.com/job/Multiverse-Portals/lastSuccessfulBuild/artifact/target/Multiverse-Portals-4.3.1-SNAPSHOT.jar"
+  local multiverse_inventories_url="https://ci.onarandombox.com/job/Multiverse-Inventories/lastSuccessfulBuild/artifact/target/Multiverse-Inventories-4.2.4-SNAPSHOT.jar,https://api.spiget.org/v2/resources/45254/download"
   local voidgen_url="https://api.spiget.org/v2/resources/63689/download"
 
   local plugins=(
@@ -280,6 +290,7 @@ install_plugins() {
     "AlternateCurrent|$alternatecurrent_url|AlternateCurrent.jar"
     "Multiverse-Core|$multiverse_core_url|Multiverse-Core.jar"
     "Multiverse-Portals|$multiverse_portals_url|Multiverse-Portals.jar"
+    "Multiverse-Inventories|$multiverse_inventories_url|Multiverse-Inventories.jar"
     "VoidGen|$voidgen_url|VoidGen.jar"
   )
 
@@ -318,6 +329,7 @@ bootstrap() {
   require_eula
   sync_config
   ensure_commands_aliases
+  ensure_multiverse_core_config
 
   [[ -f "$DATA_DIR/server.properties" ]] || touch "$DATA_DIR/server.properties"
 

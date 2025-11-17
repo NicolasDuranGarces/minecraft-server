@@ -1,0 +1,11 @@
+groups:
+  survival:
+    worlds:
+    - world
+    - world_nether
+    - world_the_end
+    last_location: true
+  lobby:
+    worlds:
+    - lobby
+    last_location: false

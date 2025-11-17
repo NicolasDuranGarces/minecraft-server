@@ -1,0 +1,6 @@
+multiverse-configuration:
+  spawn:
+    first-spawn-override: true
+    first-spawn-location: lobby
+    enable-join-destination: true
+    join-destination: w:lobby

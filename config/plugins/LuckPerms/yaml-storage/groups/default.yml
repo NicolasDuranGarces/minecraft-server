@@ -9,6 +9,8 @@ permissions:
   # Lobby (tp a mundo lobby con Multiverse)
   - multiverse.access.lobby
   - multiverse.teleport.self.lobby
+  - multiverse.teleport.self.w.lobby
+  - multiverse.core.spawn.self.lobby
   # Portales Multiverse: permitir uso, no comandos entre mundos
   - multiverse.portal.access.*
   - multiverse.portal.use
