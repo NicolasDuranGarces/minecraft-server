@@ -45,6 +45,13 @@ sync_config() {
   mkdir -p "$PLUGINS_DIR"
 }
 
+ensure_commands_aliases() {
+  # Fuerza la copia/actualización de commands.yml para que /comandos y /lobby siempre estén activos
+  if [[ -f "$CONFIG_DIR/commands.yml" ]]; then
+    cp -f "$CONFIG_DIR/commands.yml" "$DATA_DIR/commands.yml"
+  fi
+}
+
 patch_property() {
   local key=$1
   local value=$2
@@ -310,6 +317,7 @@ bootstrap() {
   mkdir -p "$DATA_DIR"
   require_eula
   sync_config
+  ensure_commands_aliases
 
   [[ -f "$DATA_DIR/server.properties" ]] || touch "$DATA_DIR/server.properties"
 
