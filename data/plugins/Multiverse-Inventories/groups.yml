@@ -1,0 +1,12 @@
+groups:
+  survival:
+    worlds:
+    - world
+    - world_nether
+    - world_the_end
+    # Desactivamos last_location en login para que MV Core pueda mandarte al lobby; seguirás reapareciendo donde mueras por cama/anchor
+    last_location: false
+  lobby:
+    worlds:
+    - lobby
+    last_location: false

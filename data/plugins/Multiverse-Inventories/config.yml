@@ -1,0 +1,11 @@
+settings:
+  # Guarda la última posición por grupo
+  last_location: true
+  # Habilitar separación por mundos
+  use_game_mode_profiles: true
+
+shares:
+  # Compartir inventario/exp si quieres entre mundos del mismo grupo
+  # Por defecto: inventory, achievments, ender_chest, exp, health, hunger, effects
+  # Puedes ajustarlo si deseas que lobby no comparta nada
+  use_same_directory: false

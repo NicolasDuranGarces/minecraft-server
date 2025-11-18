@@ -15,6 +15,10 @@ data/plugins/LuckPerms/yaml-storage/*
 data/plugins/LuckPerms/yaml-storage/groups/*
 !data/plugins/LuckPerms/yaml-storage/groups/default.yml
 !data/plugins/LuckPerms/yaml-storage/groups/admin.yml
+!data/plugins/Multiverse-Inventories/
+data/plugins/Multiverse-Inventories/*
+!data/plugins/Multiverse-Inventories/config.yml
+!data/plugins/Multiverse-Inventories/groups.yml
 db_data/
 backups/
 crash-reports/
