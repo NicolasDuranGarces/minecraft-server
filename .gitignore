@@ -1,6 +1,12 @@
 .env
 *.log
-data/
+data/*
+!data/plugins/
+data/plugins/*
+!data/plugins/Multiverse-Core/
+data/plugins/Multiverse-Core/*
+!data/plugins/Multiverse-Core/config.yml
+!data/plugins/Multiverse-Core/worlds.yml
 db_data/
 backups/
 crash-reports/
