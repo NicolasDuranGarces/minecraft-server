@@ -1,0 +1,29 @@
+uuid: 00000000-0000-0000-0000-000000000000
+name: default
+permissions:
+  # TPA / hogar
+  - essentials.tpa
+  - essentials.tpaccept
+  - essentials.sethome
+  - essentials.home
+  # Lobby (tp a mundo lobby con Multiverse)
+  - multiverse.access.lobby
+  - multiverse.teleport.self.lobby
+  - multiverse.teleport.self.w.lobby
+  - multiverse.core.spawn.self.lobby
+  # Comandos básicos /lobby y /comandos (alias que usan mvtp y tellraw)
+  - minecraft.command.tellraw
+  # Portales Multiverse: permitir uso, no comandos entre mundos
+  - multiverse.portal.access.*
+  - multiverse.portal.use
+  # Sin permisos de /mvtp libre a otros mundos (no añadido)
+  # ProtectionStones: permitir colocar y gestionar su propia región
+  - protectionstones.create
+  - protectionstones.use.*
+  # Límite de protecciones: 3 regiones por jugador
+  - protectionstones.limit.3
+prefixes:
+  '10': '&7[USER] '
+meta:
+  tabprefix: '&7[USER] '
+  tabsuffix: ''

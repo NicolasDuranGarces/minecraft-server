@@ -1,0 +1,12 @@
+uuid: 00000000-0000-0000-0000-000000000099
+name: admin
+parents:
+  - default
+permissions:
+  # Acceso total (wildcard)
+  - "*"
+prefixes:
+  "100": "&c[ADMIN] "
+meta:
+  tabprefix: "&c[ADMIN] "
+  tabsuffix: ""

@@ -7,6 +7,14 @@ data/plugins/*
 data/plugins/Multiverse-Core/*
 !data/plugins/Multiverse-Core/config.yml
 !data/plugins/Multiverse-Core/worlds.yml
+!data/plugins/LuckPerms/
+data/plugins/LuckPerms/*
+!data/plugins/LuckPerms/yaml-storage/
+data/plugins/LuckPerms/yaml-storage/*
+!data/plugins/LuckPerms/yaml-storage/groups/
+data/plugins/LuckPerms/yaml-storage/groups/*
+!data/plugins/LuckPerms/yaml-storage/groups/default.yml
+!data/plugins/LuckPerms/yaml-storage/groups/admin.yml
 db_data/
 backups/
 crash-reports/

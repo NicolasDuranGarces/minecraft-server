@@ -195,11 +195,11 @@ lobby:
   seed: 3282685778845237826
   spawn-location:
     ==: MVSpawnLocation
-    x: 9.036430602770828
-    y: -60.0
-    z: 3.403897485906914
-    pitch: 13.050002
-    yaw: 179.55098
+    x: 0.5
+    y: 75.0
+    z: 0.5
+    pitch: 0.0
+    yaw: 0.0
   spawning:
     monster:
       spawn: true
