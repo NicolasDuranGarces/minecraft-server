@@ -5,10 +5,11 @@ aliases:
   - "mvtp lobby"
   comandos:
   # Usamos @p para evitar problemas con @s en Bukkit (selecciona al jugador que ejecuta /comandos)
-  - "minecraft:tellraw @p [{\"text\":\"Comandos básicos:\",\"color\":\"gold\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"/lobby\",\"color\":\"aqua\"},{\"text\":\" - Ir al lobby\",\"color\":\"gray\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"/tpa <jugador>\",\"color\":\"aqua\"},{\"text\":\" - Solicitar TP\",\"color\":\"gray\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"/tpaccept\",\"color\":\"aqua\"},{\"text\":\" - Aceptar TP\",\"color\":\"gray\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"/sethome\",\"color\":\"aqua\"},{\"text\":\" - Establecer casa\",\"color\":\"gray\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"/home\",\"color\":\"aqua\"},{\"text\":\" - Ir a tu casa\",\"color\":\"gray\"}]"
-  - "minecraft:tellraw @p [{\"text\":\"Protección: craftea y coloca una piedra PS (fortress/guardian/citadel/beacon/shield/carbon). Usa /ps info, /ps addowner, /ps addmember\",\"color\":\"gray\"}]"
+  # Cambiamos a @a (todos) para evitar errores de selector; solo muestra texto, no ejecuta nada sensible
+  - "minecraft:tellraw @a [{\"text\":\"Comandos básicos:\",\"color\":\"gold\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"/lobby\",\"color\":\"aqua\"},{\"text\":\" - Ir al lobby\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"/tpa <jugador>\",\"color\":\"aqua\"},{\"text\":\" - Solicitar TP\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"/tpaccept\",\"color\":\"aqua\"},{\"text\":\" - Aceptar TP\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"/sethome\",\"color\":\"aqua\"},{\"text\":\" - Establecer casa\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"/home\",\"color\":\"aqua\"},{\"text\":\" - Ir a tu casa\",\"color\":\"gray\"}]"
+  - "minecraft:tellraw @a [{\"text\":\"Protección: craftea y coloca una piedra PS (fortress/guardian/citadel/beacon/shield/carbon). Usa /ps info, /ps addowner, /ps addmember\",\"color\":\"gray\"}]"
